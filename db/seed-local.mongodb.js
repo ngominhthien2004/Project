@@ -1,10 +1,12 @@
 /* global use, db */
-// MongoDB Playground - ATLAS CLOUD - Trang web đọc truyện tranh
-// Kết nối: mongodb+srv://ngominhthien2222:***@ngominhthien22.pd74ikk.mongodb.net/comicWebDB
-// Database và collection dành cho quản lý truyện tranh
+// MongoDB Playground - LOCAL DOCKER - Trang web đọc truyện tranh
+// Kết nối: mongodb://localhost:27017/
 
 // Select the database to use.
 use('comicWebDB');
+
+// Xóa collection cũ nếu có
+db.getCollection('comics').drop();
 
 // Insert một số truyện tranh mẫu vào collection comics.
 db.getCollection('comics').insertMany([
@@ -114,20 +116,18 @@ db.getCollection('comics').insertMany([
   }
 ]);
 
+console.log('✅ Đã seed 8 truyện tranh vào LOCAL MongoDB!');
+
 // Tìm các truyện được cập nhật trong tháng 1/2026
 const recentlyUpdated = db.getCollection('comics').find({
   updatedAt: { $gte: new Date('2026-01-01'), $lt: new Date('2026-02-01') }
 }).count();
 
-// In thông tin ra output
 console.log(`${recentlyUpdated} truyện được cập nhật trong tháng 1/2026.`);
 
-// Thống kê truyện theo thể loại và tính tổng lượt xem
-// Sử dụng $unwind để tách mảng genre thành các document riêng biệt
+// Thống kê truyện theo thể loại
 db.getCollection('comics').aggregate([
-  // Tách mảng genre
   { $unwind: '$genre' },
-  // Nhóm theo thể loại và tính tổng views
   { $group: { 
       _id: '$genre', 
       totalViews: { $sum: '$views' },
@@ -135,6 +135,5 @@ db.getCollection('comics').aggregate([
       avgRating: { $avg: '$rating' }
     } 
   },
-  // Sắp xếp theo tổng lượt xem giảm dần
   { $sort: { totalViews: -1 } }
 ]);

@@ -1,7 +1,7 @@
 {
-  "name": "mevn-project",
+  "name": "comicweb-docker",
   "version": "1.0.0",
-  "description": "MEVN stack application",
+  "description": "Comic web platform with Docker",
   "scripts": {
     "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
     "server:dev": "cd server && npm run dev",
@@ -9,10 +9,15 @@
     "server:install": "cd server && npm install",
     "client:install": "cd client && npm install",
     "install:all": "npm install && npm run server:install && npm run client:install",
+    "docker:build": "docker-compose build",
     "docker:up": "docker-compose up -d",
-    "docker:down": "docker-compose down"
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "docker:logs:server": "docker-compose logs -f server",
+    "docker:logs:client": "docker-compose logs -f client",
+    "docker:logs:mongodb": "docker-compose logs -f mongodb"
   },
-  "keywords": ["mevn", "mongodb", "express", "vue", "nodejs"],
+  "keywords": ["mevn", "mongodb", "express", "vue", "nodejs", "docker"],
   "author": "",
   "license": "ISC",
   "devDependencies": {
